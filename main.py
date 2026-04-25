@@ -9,24 +9,20 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 def alice():
     data = request.json
     user_text = data.get("request", {}).get("original_utterance", "")
-    
     if not user_text:
-        return jsonify({"response": {"text": "Привет! Задай мне любой вопрос.", "end_session": False}, "version": "1.0"})
-    
+        return jsonify({"response": {"text": "Привет! Задай вопрос.", "end_session": False}, "version": "1.0"})
     try:
         r = requests.post(
             f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}",
             json={"contents": [{"parts": [{"text": user_text}]}]}
         )
-        resp_json = r.json()
-if "candidates" not in resp_json:
-    answer = f"Gemini ответил: {str(resp_json)}"
-else:
-    answer = resp_json["candidates"][0]["content"]["parts"][0]["text"]
-        answer = answer[:1000]
+        resp = r.json()
+        if "candidates" in resp:
+            answer = resp["candidates"][0]["content"]["parts"][0]["text"][:1000]
+        else:
+            answer = str(resp)[:1000]
     except Exception as e:
-        answer = f"Ошибка: {str(e)}"
-    
+        answer = str(e)[:500]
     return jsonify({"response": {"text": answer, "end_session": False}, "version": "1.0"})
 
 if __name__ == "__main__":
