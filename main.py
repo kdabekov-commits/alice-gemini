@@ -20,8 +20,8 @@ def alice():
         )
         answer = r.json()["candidates"][0]["content"]["parts"][0]["text"]
         answer = answer[:1000]
-    except:
-        answer = "Не удалось получить ответ от Gemini."
+    except Exception as e:
+    answer = f"Ошибка: {str(e)}"
     
     return jsonify({"response": {"text": answer, "end_session": False}, "version": "1.0"})
 
