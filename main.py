@@ -18,7 +18,11 @@ def alice():
             f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}",
             json={"contents": [{"parts": [{"text": user_text}]}]}
         )
-        answer = r.json()["candidates"][0]["content"]["parts"][0]["text"]
+        resp_json = r.json()
+if "candidates" not in resp_json:
+    answer = f"Gemini ответил: {str(resp_json)}"
+else:
+    answer = resp_json["candidates"][0]["content"]["parts"][0]["text"]
         answer = answer[:1000]
     except Exception as e:
         answer = f"Ошибка: {str(e)}"
