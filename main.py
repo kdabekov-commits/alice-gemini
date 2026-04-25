@@ -13,7 +13,7 @@ def alice():
         return jsonify({"response": {"text": "Привет! Задай вопрос.", "end_session": False}, "version": "1.0"})
     try:
         r = requests.post(
-            f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}",
+            f"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={GEMINI_API_KEY}",
             json={"contents": [{"parts": [{"text": user_text}]}]}
         )
         resp = r.json()
