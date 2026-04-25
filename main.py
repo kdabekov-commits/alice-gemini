@@ -13,16 +13,17 @@ def alice():
         return jsonify({"response": {"text": "Привет! Задай вопрос.", "end_session": False}, "version": "1.0"})
     try:
         r = requests.post(
-            f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}",
-            json={"contents": [{"parts": [{"text": user_text}]}]}
+            f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}",
+            json={"contents": [{"parts": [{"text": user_text}]}]},
+            timeout=4
         )
         resp = r.json()
         if "candidates" in resp:
-            answer = resp["candidates"][0]["content"]["parts"][0]["text"][:1000]
+            answer = resp["candidates"][0]["content"]["parts"][0]["text"][:900]
         else:
-            answer = str(resp)[:1000]
+            answer = str(resp)[:500]
     except Exception as e:
-        answer = str(e)[:500]
+        answer = str(e)[:300]
     return jsonify({"response": {"text": answer, "end_session": False}, "version": "1.0"})
 
 if __name__ == "__main__":
